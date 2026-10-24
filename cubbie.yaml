@@ -1,0 +1,8 @@
+cubbie: 1
+network:
+  runtime:
+    - boards-api.greenhouse.io
+    - api.lever.co
+    - api.ashbyhq.com
+    - api.smartrecruiters.com
+    - "*.supabase.co"
