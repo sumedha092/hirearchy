@@ -176,8 +176,13 @@ FETCHERS = {"greenhouse": fetch_greenhouse, "lever": fetch_lever,
 
 
 def load_boards(companies=None):
-    with open(os.path.join(HERE, "boards.json")) as f:
-        boards = json.load(f)
+    boards = []
+    with open(os.path.join(HERE, "boards.csv")) as f:
+        next(f)  # header: provider,board,name
+        for line in f:
+            parts = line.strip().split(",")
+            if len(parts) == 3 and parts[0] in FETCHERS:
+                boards.append({"provider": parts[0], "board": parts[1], "name": parts[2]})
     extra = os.path.join(DATA_DIR, "extra_boards.json")
     if os.path.exists(extra):
         try:
@@ -315,6 +320,9 @@ LEVEL_2PLUS = re.compile(r"\b(engineer|developer|analyst|scientist|programmer)\s
 INTERN = re.compile(r"\b(intern|internship|co-?op)\b", re.I)
 EARLY = re.compile(r"\b(new grad|new graduate|university grad|graduate|entry[- ]level|early career|"
                    r"junior|associate|engineer i|apprentice|campus|university)\b|\b(i|1)$", re.I)
+EARLY_DESC = re.compile(r"\b(new grads?|new graduates?|recent (college )?grad(uate)?s?|university grad(uate)?s?|"
+                        r"entry[- ]level|early[- ]career|class of 20\d\d|graduating in 20\d\d|"
+                        r"0\s*[-–]\s*[12]\s*years?|no (prior )?experience required)\b", re.I)
 YEARS = re.compile(r"(\d{1,2})\s*\+?\s*(?:-\s*\d{1,2}\s*)?(?:years?|yrs?)\b(?![^.\n]{0,40}\b(?:preferred|"
                    r"nice to have|a plus|bonus)\b)", re.I)
 VISA_RISK = re.compile(r"(u\.?s\.? citizen|citizenship (is )?required|security clearance|active clearance|"
@@ -392,8 +400,14 @@ def full_filter_and_score(job, p, resume_text=""):
     """Second pass once a description is known. Returns (reason or None, job)."""
     is_intern = bool(INTERN.search(job["title"]))
     yrs = required_years(job.get("description"))
-    if not is_intern and p.get("level") in ("newgrad", "both") and yrs is not None and yrs > p.get("max_years", 2):
-        return "needs more experience", job
+    if not is_intern and p.get("level") in ("newgrad", "both"):
+        if yrs is not None and yrs > p.get("max_years", 2):
+            return "needs more experience", job
+        # Plain "Software Engineer" titles are usually mid-level. Require an
+        # entry-level signal in the title or the description.
+        if not (EARLY.search(job["title"]) or EARLY_DESC.search(job.get("description") or "")
+                or (yrs is not None and yrs <= 1)):
+            return "not marked entry-level", job
     risk = bool(VISA_RISK.search(job.get("description") or ""))
     if p.get("sponsorship") and risk and p.get("hide_visa_risk", True):
         return "no sponsorship / citizenship required", job

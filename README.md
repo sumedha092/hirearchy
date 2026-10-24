@@ -23,7 +23,7 @@ Try: "I applied to Stripe SWE intern" · "Did anyone hear back from Stripe?" · 
 | `SKILL.md` | When Cubbie uses the Skill and every flow: joining, logging applications, status, reports, intros, daily check, job search |
 | `scripts/pulse.py` | Pulse client: `join`, `apply`, `status`, `report`, `ask`, `respond`, `check`, `pause` |
 | `supabase/schema.sql` | Shared backend. Tables are locked; only these functions are exposed. Enforces anonymity, the 3+ reporter minimum for stats, give-to-get, intro consent, and rate limits |
-| `scripts/jobs.py`, `jobs_core.py`, `boards.json` | Job search across 443 boards (Greenhouse, Lever, Ashby, SmartRecruiters): parallel fetch, entry-level/US/visa filters, new-job alerts |
+| `scripts/jobs.py`, `jobs_core.py`, `boards.csv` | Job search across 443 boards (Greenhouse, Lever, Ashby, SmartRecruiters): parallel fetch, entry-level/US/visa filters, new-job alerts |
 | `cubbie.yaml` | Allowed hosts: the job board APIs and `*.supabase.co` |
 
 **Privacy:** no names are stored. Each student is a random token kept in their own Cubbie sandbox. Contact details are stored only if the student chooses to share them, and are revealed only after both sides accept.

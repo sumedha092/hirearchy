@@ -10,6 +10,15 @@ import subprocess
 import sys
 import tempfile
 
+import shutil
+
+# This test needs a developer's local Postgres (socket /tmp/pg, port 5433) with
+# supabase/schema.sql loaded. Anywhere else (e.g. a Cubbie sandbox) it skips.
+if not shutil.which("psql") or not os.path.exists("/tmp/pg/.s.PGSQL.5433"):
+    print("SKIPPED: test_pulse.py needs a local Postgres with supabase/schema.sql "
+          "(developer-only). Use tests/test_offline.py instead.")
+    sys.exit(0)
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 import pulse  # noqa
