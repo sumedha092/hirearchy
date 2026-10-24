@@ -1,49 +1,41 @@
-# job-sniper: a Cubbie Skill
+# Hiring Pulse: a Cubbie Skill
 
-Text Cubbie "any SWE internships?" and get the best matches from **443 company career boards** (Greenhouse, Lever, Ashby, SmartRecruiters) in seconds. Then turn on alerts and Cubbie texts you **only when a new matching job goes live**, and tailors your resume when you say yes.
+**You applied to Stripe two weeks ago. Did anyone hear back? What did they ask?**
 
-## Install in Cubbie
+Today students post "anyone heard back from X?" on Reddit and wait days. Hiring Pulse connects every student who applied to the same company, through their own Cubbie:
 
-Text Cubbie the link to this folder:
+- **Where you stand:** "12 others applied. 4 got the OA, usually within 9 days. You're on day 14."
+- **Live interview reports:** right after someone interviews, Cubbie asks them how it went and sends an anonymous report to everyone still waiting on that company.
+- **Give-to-get:** share one update to unlock everyone's reports.
+- **Talk to someone who got in:** an intro happens only when both students say yes. They can share a contact, answer anonymously, or skip. Nobody is told who declined.
+- **Find jobs early, too:** searches 440+ company career boards and texts you when new internships and new-grad roles go live.
 
-```
-https://github.com/<you>/<repo>/tree/main/job-sniper
-```
+## Install
 
-Reply **yes** to the install summary. There are no keys and no logins.
+Text Cubbie the link to this repo and reply **yes**. There are no keys or logins.
 
-## Try it
-
-- "Find me software engineering internships"
-- "Any data engineering new grad jobs posted this week?"
-- "Text me when new ones drop, every 6 hours"
-- "Tell me about #2" / "Tailor my resume for #2"
-- "I applied to #1" / "Show my applications"
+Try: "I applied to Stripe SWE intern" · "Did anyone hear back from Stripe?" · "Can I talk to someone who got the offer?" · "Find me SWE internships"
 
 ## How it works
 
 | File | What it does |
 |---|---|
-| `SKILL.md` | Tells Cubbie when to use the Skill and each flow: setup, search, alerts, details, tailoring, tracker |
-| `scripts/jobs.py` | Command line: `profile`, `search`, `details`, `poll`, `track`, `tracker`, `add-board` |
-| `scripts/jobs_core.py` | Parallel board fetching (48 threads, 8 s timeout per board, 80 s overall cap), US-location, seniority and visa filters, ranking |
-| `scripts/boards.json` | 443 company boards |
-| `cubbie.yaml` | The 4 API hosts the scripts call |
+| `SKILL.md` | When Cubbie uses the Skill and every flow: joining, logging applications, status, reports, intros, daily check, job search |
+| `scripts/pulse.py` | Pulse client: `join`, `apply`, `status`, `report`, `ask`, `respond`, `check`, `pause` |
+| `supabase/schema.sql` | Shared backend. Tables are locked; only these functions are exposed. Enforces anonymity, the 3+ reporter minimum for stats, give-to-get, intro consent, and rate limits |
+| `scripts/jobs.py`, `jobs_core.py`, `boards.json` | Job search across 443 boards (Greenhouse, Lever, Ashby, SmartRecruiters): parallel fetch, entry-level/US/visa filters, new-job alerts |
+| `cubbie.yaml` | Allowed hosts: the job board APIs and `*.supabase.co` |
 
-- **Speed:** All boards are fetched in parallel. Greenhouse lists are fetched without descriptions; descriptions are pulled only for the jobs about to be shown. Results are cached for 20 minutes, so follow-up searches return instantly.
-- **Alerts:** `poll` compares each board against the job IDs it saw last time, stored in `$SKILL_DATA_DIR`. A board that returned 0 jobs on its first successful fetch still counts as baselined, so its first real posting is alerted. Postings older than 30 days that show up under a new ID count as reposts and are not alerted.
-- **Safety:** Cubbie never applies or sends anything without the student's yes. Resumes are tailored only from facts already in the student's resume.
+**Privacy:** no names are stored. Each student is a random token kept in their own Cubbie sandbox. Contact details are stored only if the student chooses to share them, and are revealed only after both sides accept.
 
-Standard library only (Python 3.12). No packages.
+## Run your own backend
 
-## Test locally
+1. Create a Supabase project, open SQL Editor, paste `supabase/schema.sql`, and run it.
+2. Put the Project URL and **anon public** key in `scripts/pulse_config.json`. The anon key is safe to publish, because it can only call the Pulse functions.
+
+## Tests
 
 ```
-python3 tests/test_offline.py                         # 22 offline checks, fake data
-python3 scripts/jobs.py profile --roles "software engineer" --level both
-python3 scripts/jobs.py search --fresh                # live; check "seconds" < 90
-python3 scripts/jobs.py poll                          # first run: BASELINE_SAVED
-python3 scripts/jobs.py poll                          # later runs: NEW_JOBS or NOTHING_NEW
+python3 tests/test_offline.py   # job search, filters, alerts (fake boards)
+python3 tests/test_pulse.py     # Pulse flows against a real local Postgres
 ```
-
-When run outside Cubbie, state goes to `~/.job-sniper/`.
