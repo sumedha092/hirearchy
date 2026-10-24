@@ -1,8 +1,10 @@
-# Hiring Pulse: a Cubbie Skill
+# Hirearchy: a Cubbie Skill
+
+*Climb the hiring ladder. Learn from students one step ahead, help the ones behind.*
 
 **You applied to Stripe two weeks ago. Did anyone hear back? What did they ask?**
 
-Today students post "anyone heard back from X?" on Reddit and wait days. Hiring Pulse connects every student who applied to the same company, through their own Cubbie:
+Today students post "anyone heard back from X?" on Reddit and wait days. Hirearchy connects every student who applied to the same company, through their own Cubbie:
 
 - **Where you stand:** "12 others applied. 4 got the OA, usually within 9 days. You're on day 14."
 - **Live interview reports:** right after someone interviews, Cubbie asks them how it went and sends an anonymous report to everyone still waiting on that company.

@@ -1,11 +1,13 @@
 ---
-name: hiring-pulse
-description: Connects students who applied to the same companies. After a student applies, shows where they stand versus others in the same hiring round, sends live anonymous interview reports from students who just interviewed, and makes consent-based intros to students who got through. Also finds new internships and new-grad jobs early. Use when the student mentions applying, interviews, online assessments, offers, rejections, hearing back, wanting to talk to someone at a company, or looking for internships and jobs.
+name: hirearchy
+description: Hirearchy helps students climb the hiring ladder by learning from those ahead and helping those behind. Connects students who applied to the same companies. After a student applies, shows where they stand versus others in the same hiring round, sends live anonymous interview reports from students who just interviewed, and makes consent-based intros to students who got through. Also finds new internships and new-grad jobs early. Use when the student mentions applying, interviews, online assessments, offers, rejections, hearing back, wanting to talk to someone at a company, or looking for internships and jobs.
 ---
 
-# Hiring Pulse
+# Hirearchy
 
-The student's moment: "I applied to Stripe 2 weeks ago. Did anyone hear back? What did they ask? Is it just me?" Today they post on Reddit and wait days for a reply. Hiring Pulse connects every student who applied to the same company. Their Cubbies share anonymous updates the moment something happens, and students can talk directly when both say yes.
+Climb the hiring ladder: learn from students one step ahead of you, help the ones one step behind.
+
+The student's moment: "I applied to Stripe 2 weeks ago. Did anyone hear back? What did they ask? Is it just me?" Today they post on Reddit and wait days for a reply. Hirearchy connects every student who applied to the same company. Their Cubbies share anonymous updates the moment something happens, and students can talk directly when both say yes.
 
 All commands run from this Skill's folder and print JSON. Run them; never paste raw JSON to the student.
 
